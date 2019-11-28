@@ -9,142 +9,120 @@ namespace ConsoleApp2
     class Program
     {
         static Random rnd = new Random();
+
+        const int maxSize = 100;
+       
+        struct Point {
+            public int x;
+            public int y;
+            
+            public Point(int x, int y) {
+                this.x = x;
+                this.y = y;
+            }
+
+            public void ShowPoint() {
+                Console.Write("(" + this.x + "; " + this.y +")");
+            }
+
+        };
+
+        struct Window {
+            public Point LT, RT, RB, LB;
+            public bool visibility;
+
+            public Window(Point LT, Point RT, Point RB, Point LB) {
+                this.LT = LT;
+                this.RT = RT;
+                this.RB = RB;
+                this.LB = LB;
+                this.visibility = true;
+            }
+
+
+            public void ShowWindow() {
+                Console.Write("LT = ");
+                this.LT.ShowPoint();
+                Console.Write(" RT = ");
+                this.RT.ShowPoint();
+                Console.Write(" RB = ");
+                this.RB.ShowPoint();
+                Console.Write(" LB = ");
+                this.LB.ShowPoint();
+                Console.WriteLine();
+            }
+        };
+
         static void Main(string[] args)
         {
+            int n = 9;
 
-            Console.WriteLine("Укажите размреность матрицы");
-            int n = Convert.ToInt16(Console.ReadLine());
+            Window[] windows = new Window[n];
 
-            int[,] array = new int[n + 2, n + 2];
-
-            for (int i = 0; i < n + 2; i++)
+            for (int i = 0; i < n; i++)
             {
-                for (int j = 0; j < n + 2; j++)
-                {
-                    if (i == 0 || j == 0 || i == n + 1 || j == n + 1)
-                        array[i, j] = -1;
-                    else
-                        array[i, j] = 0;
+                windows[i] = ReadWindow();
+                //Console.Write(i + ". ");
+                //windows[i].ShowWindow();
+            }
+            for (int i = 0; i < n; i++) {
+                for (int j = i+1; j < n; j++) {
+                    windows[i].visibility = isVisibile(windows[i], windows[j]);
                 }
-
             }
 
-            int arrayValue = 0;
-            int direction = 0;
-
-            int indexOfLine = 1, indexOfColumn = 1;
-            if (n == 1)
-                Console.WriteLine(1);
-            else
-            {
-                while (arrayValue < n * n)
-                {
-
-                    while (direction == 0)
-                    {
-                        arrayValue++;
-                        if (array[indexOfLine, indexOfColumn + 1] == 0)
-                        {
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfColumn++;
-                        }
-                        else
-                        {
-                            if (arrayValue > n * n)
-                                break;
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfLine++;
-                            //arrayValue--;
-                            direction = 1;
-                        }
-                    }
-
-                    while (direction == 1)
-                    {
-                        arrayValue++;
-                        if (array[indexOfLine + 1, indexOfColumn] == 0)
-                        {
-
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfLine++;
-
-                        }
-                        else
-                        {
-                            if (arrayValue > n * n)
-                                break;
-                            //arrayValue--;
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfColumn--;
-                            direction = 2;
-                        }
-                    }
-
-                    while (direction == 2)
-                    {
-                        arrayValue++;
-                        if (array[indexOfLine, indexOfColumn - 1] == 0)
-                        {
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfColumn--;
-                        }
-                        else
-                        {
-                            if (arrayValue > n * n)
-                                break;
-                            //arrayValue--;
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfLine--;
-                            direction = 3;
-                        }
-                    }
-
-                    while (direction == 3)
-                    {
-                        arrayValue++;
-                        if (array[indexOfLine - 1, indexOfColumn] == 0)
-                        {
-                            //arrayValue++;
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfLine--;
-                        }
-                        else
-                        {
-                            if (arrayValue > n * n)
-                                break;
-                            //arrayValue--;
-                            array[indexOfLine, indexOfColumn] = arrayValue;
-                            indexOfColumn++;
-                            direction = 0;
-                        }
-                    }
-
-                }
-
-                //for (int i = 1; i < n + 1; i++)
-                //{
-                //    for (int j = 1; j < n + 1; j++)
-                //    {
-
-                //        Console.Write(array[i, j] + " ");
-                //    }
-                //    Console.WriteLine();
-
-                //}
+            int counter = n;
+            for (int i = 0; i < n; i++) {
+                if (windows[i].visibility)
+                    counter--;
             }
-
-            ShowArray(array, n + 2, n + 2);
+            Console.WriteLine(counter + " - столько окон вы видите " );
 
             Console.Read();
 
         }
+        static Window ReadWindow() {
+            Point LT = ReadPoint();
+            Point RT = ReadPoint();
+            Point RB = ReadPoint();
+            Point LB = ReadPoint();
+            return new Window(LT, RT, RB, LB);
 
-        //static void Main(string[] args) {
+        }
+        static Window GenerateWindow() {
+            Point LT, RT, RB, LB;
+
+            LB = GeneratePoint();
+            RT = GeneratePoint(LB.x, LB.y);
+            LT = new Point(LB.x, RT.y);
+            RB = new Point(RT.x, LB.y);
+
+            return new Window(LT, RT, RB, LB);
 
 
+        }
 
-        //    Console.Read();
-        //}
+        static Point ReadPoint() {
+            string s = Console.ReadLine();
+            string[] tokens = s.Split();
+
+            int x = int.Parse(tokens[0]);
+            int y = int.Parse(tokens[1]);
+
+            return new Point(x,y);
+        }
+        static Point GeneratePoint(int minX = 0, int minY = 0) {
+            return new Point(rnd.Next(minX + 1, maxSize), rnd.Next(minY + 1, maxSize));
+        }
+
+        static bool isVisibile(Window w1, Window w2) {
+            if ( w1.LT.x > w2.RT.x || w1.RT.x < w2.LT.x || w1.LT.y < w2.LB.y || w1.LB.y > w2.LT.y) 
+                return true;
+            else 
+                return false;
+        }
+
+
 
 
         static void Speak() {
