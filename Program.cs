@@ -1,349 +1,307 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ConsoleApp2
+namespace PracticalWorks
 {
     class Program
     {
-        struct Student {
-            private String fullName;
-            private String group;
-            private int age;
-            private int solar;
-            private Dictionary<string, int> rates;
-            public bool isManager;
-
-
-            public Student(string fullName, string group) {
-                this.fullName = fullName;
-                this.group = group;
-                this.age = 18;
-                solar = 1000;
-                rates = new Dictionary<string, int>();
-                isManager = false;
-            }
-
-            public string GetName() {
-                return fullName;
-            }
-
-            public void AddRates(string subject, int rating) {
-                if (rating > 5 || rating < 1)
-                    sendMessage("Оценка должны быть в диапазоне от 1 до 5");
-                else
-                    rates.Add(subject, rating);
-            }
-
-            public int GetRates(string subject) {
-                return rates[subject];
-            }
-
-            public Dictionary<string, int> GetRatesList() {
-                return rates;
-            }
-
-            public void SetAge(int age) {
-                this.age = age; 
-            }
-
-            public int GetAge() {
-                return age;
-            }
-
-            public void SetSolar(int solar) {
-                this.solar = solar;
-            }
-
-            public int GetSolar() {
-                return solar;
-            }
-
-            public void MakeManager() {
-                isManager = true;
-            }
-
-            public void DowngradeManager() {
-                isManager = false;
-            }
-           
-            private void sendMessage(string error) {
-                Console.WriteLine("ERROR: " + error);
-            }
-
-            public void ShowStudent() {
-                Console.WriteLine(fullName + ", группа: " + group );
-            }
-
-          
-
-        }
-
-        struct Group {
-            private List<Student> students ;
-            private string groupName;
-
-            public Group(string name) {
-                students = new List<Student>();
-                this.groupName = name;
-            }
-
-            public Student GetManager() {
-                Student manager = new Student();
-                foreach (Student student in students) {
-                    if (student.isManager) {
-                        manager = student;
-                        break;
-                    }
-                }
-
-                return manager;
-            }
-
-          
-
-            public void AddStudent(string fullName) {
-                students.Add(new Student(fullName, groupName));
-            }
-
-            public void ExpelStudent(string fullName) {
-                students.Remove(SearchStudent(fullName));
-            }
-
-            public void ShowGroup() {
-                Console.WriteLine(groupName + ":");
-                foreach (Student item in students) {
-                    Console.WriteLine(item.GetName());
-                }
-            }
-
-            public string GetGroupName() {
-                return groupName;
-            }
-
-            public Student SearchStudent(string fullName) {
-                Student findedStudent = new Student();
-                foreach (Student student in students) { 
-                    if (student.GetName() == fullName) {
-                        findedStudent = student;
-                        break;
-                    }
-                }
-
-                return findedStudent;
-            }
-
-
-
-
-        }
-
-        struct Menu {
-
-            private List<string> menuList;
-
-            public Menu(string menuItem) {
-                menuList = new List<string>();
-                AddMenuItem(menuItem);
-            }
-
-            public void AddMenuItem(string menuItem) {
-                menuList.Add(menuItem);
-            }
-
-
-        
-        }
-
-        static List<Group> groups = new List<Group>();
-
         static void Main(string[] args)
         {
 
-            bool isWorking = true;
+            PracticalWork_1();
+            PracticalWork_2();
+            //PracticalWork_3();
+            PracticalWork_4();
+            PracticalWork_5();
+            PracticalWork_6();
+            PracticalWork_7();
 
-            while (isWorking) {
-                OpenMenu();
-
-                string item = Console.ReadLine();
-                switch (item) {
-                    case "1":
-                        ShowGroups();
-                        break;
-                    case "2":
-                        AddGroup();
-                        break;
-                    case "3":
-                        OpenGroupMenu(OpenGroup());
-
-                        break;
-
-                    case "4":
-                        Console.WriteLine("Работа с журналом завершена.");
-                        isWorking = false;
-                        break;
-                    default:
-                        Console.WriteLine("ERROR: Введите номер меню!");
-                        break;
-             
-                
-                }
-            }
-
-
-
-
-            Console.Read();
         }
-       
 
-        
-        static void OpenMenu() {
-            
-            
-            Console.WriteLine("Введите нужный Вам номер пункта меню:");
+        static void PracticalWork_1()
+        {
+            Console.WriteLine("Практическая работа №1");
 
-            string[] tokens = new string[] {"Показать список групп" ,"Создать группу", "Открыть группу", "Завершить работу" };
-
-            for (int i = 0; i < tokens.Length; i++)
+            Console.WriteLine("Введите трехзначное число");
+            int n = Convert.ToInt32(Console.ReadLine());
+            Console.Write("квадрат заданного трехзначного числа равен куб суммы цифр этого числа - ");
+            if (n * n == Math.Pow(n / 100 + n % 100 / 10 + n % 10, 3))
             {
-                Console.WriteLine((i + 1) + " - " + tokens[i]);
+                Console.WriteLine("True");
             }
-        }
-
-        static Group OpenGroup() {
-            Console.WriteLine("Введите называние группы");
-            string name = Console.ReadLine();
-            Group findedGroup = new Group();
-            bool isFind = false;
-            foreach (Group group in groups) {
-                if (group.GetGroupName() == name)
-                {
-                    findedGroup = group;
-                    isFind = true;
-                }
-            }
-            if (!isFind) {
-                Console.WriteLine("ERROR: Данная группа не найдена");
-                OpenGroup();
-            }
-
-            return findedGroup;
-        }
-
-        static void OpenGroupMenu(Group group) {
-          
-
-            
-            bool isWorking = true;
-
-            while (isWorking) {
-                ShowGroupMenu();
-                string item = Console.ReadLine();
-                switch (item)
-                {
-                    case "1":
-                        AddStudent(group);
-                        break;
-                    case "2":
-                        ExpelStudent(group);
-                        break;
-                    case "3":
-                        ShowManager(group);
-                        break;
-                    case "4":
-                        MakeManager(ref group);
-                        break;
-                    case "5":
-                        Console.Write("Список группы ");
-                        group.ShowGroup();
-                        Console.WriteLine();
-
-                        break;
-                    case "6":
-                        Console.WriteLine("Возврат к главному меню");
-                        isWorking = false;
-                        break;
-                    default:
-                        Console.WriteLine("ERROR: Введите номер меню!");
-                        break;
+            else
+                Console.WriteLine("False");
 
 
-                }
 
-
-            }
-
-        }
-
-        static void ShowGroupMenu() {
-            Console.WriteLine("Введите нужный Вам номер пункта меню:");
-
-            string[] tokens = new string[] { "Добавить студента", "Отчислить сутдента", "Показать саросту", "Назначить старосту", "Посмотреть список группы", "Вернуться к главному меню" };
-
-            for (int i = 0; i < tokens.Length; i++)
+            Console.WriteLine("Введите четырехзначное число");
+            n = Convert.ToInt32(Console.ReadLine());
+            Console.Write("сумма двух первых цифр заданного четырехзначного числа равна сумме двух его последних циф - ");
+            if (n / 1000 + n % 1000 / 100 == n % 100 / 10 + n % 10)
             {
-                Console.WriteLine((i + 1) + " - " + tokens[i]);
+                Console.WriteLine("True");
             }
+            else
+                Console.WriteLine("False");
+
+
+            Console.WriteLine("Введите трехзначное число");
+            n = Convert.ToInt32(Console.ReadLine());
+            Console.Write("среди цифр заданного трехзначного числа есть одинаковые - ");
+            string str = n.ToString();
+            bool fl = false;
+            for (int i = 0; i < str.Length; i++)
+            {
+                for (int j = i; j < str.Length; j++)
+                    if (str[i] == str[j])
+                        fl = true;
+            }
+            Console.WriteLine(fl);
+
+
+            Console.WriteLine("Введите вещественное положительное число");
+            double d = Convert.ToDouble(Console.ReadLine());
+            str = d.ToString();
+            bool hasMontice = false;
+            fl = false;
+
+            Console.WriteLine("Ваще число: " + str);
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == ',')
+                    hasMontice = true;
+                if (hasMontice)
+                {
+                    for (int j = 1; j < 3; j++)
+                    {
+                        if (str[i + j] == '0')
+                            fl = true;
+                    }
+                    break;
+                }
+
+            }
+            Console.WriteLine("среди первых трех цифр из дробной части заданного положительного вещественного числа есть цифра 0 - " + fl);
+
         }
 
-        static void ShowGroups() {
-            Console.WriteLine("Список групп:");
-            foreach (Group group in groups) {
-                Console.WriteLine(group.GetGroupName());
+        static void PracticalWork_2() {
+            Console.WriteLine("Практическая работа №2");
+
+            Console.WriteLine("Введите натруальное число n");
+            int n = Convert.ToInt32(Console.ReadLine());
+            double answer = 1;
+            for (int i = 1; i <= n; i++) {
+                int f = 1;
+                for (int j = 1; j <= i; j++) {
+                    f *= j;
+                }
+                answer *= 2 + (double)1/f;
+            }
+            Console.WriteLine("Ответ: " + answer);
+        }
+
+        static void PracticalWork_3() { 
+            Console.WriteLine("Практическая работа №3");
+
+
+        }
+
+        static void PracticalWork_4() {
+            Console.WriteLine("Практическая работа №4");
+
+            Console.Write("Двузначное число, которое равно утроенному произведению его чисел: ");
+            int answer = 0;
+
+            for (int i = 10; i < 100; i++)
+            {
+                if (i == 3 * (i % 10) * (i / 10))
+                {
+                    answer = i;
+                    Console.Write(answer + ", ");
+                }
+            }
+
+            Console.WriteLine();
+
+        }
+
+        static void PracticalWork_5() {
+            Console.WriteLine("Практическая работа №5");
+
+            string str = "";
+            Console.WriteLine("Введите число k");
+            int k = Convert.ToInt32(Console.ReadLine());
+            int f0 = 1;
+            int f1 = 1;
+            str = "11";
+            for (int i = 0; i < k; i++) {
+                int fc = f0 + f1;
+                f0 = f1;
+                f1 = fc;
+
+                str = str + fc.ToString();
+            }
+            Console.WriteLine("k-ый символ последовательности [ " + str + "... ]: " + str[k-1]);
+        }
+
+        static void PracticalWork_6() {
+            Console.WriteLine("Практическая работа №6");
+
+            Console.Write("n = ");
+            int n = Convert.ToInt32(Console.ReadLine());
+            int[] array = new int[n];
+            Console.WriteLine("Ввидите n чисел. Каждое число с новой строки");
+
+            for (int i = 0; i < n; i++) { 
+                array[i] = Convert.ToInt32(Console.ReadLine());
+            }
+            
+            Console.Write("Ваш массив: ");
+            for (int i = 0; i < n; i++) {
+                Console.Write(array[i] + " ");
             }
             Console.WriteLine();
-        }
 
-        static void AddStudent(Group group) {
-            Console.WriteLine("Введите имя нового студента полностью");
-            string name = Console.ReadLine();
-            group.AddStudent(name);
+            int[] arrayB = new int[n];
 
-            Console.WriteLine("Студент " + name + " был успешно зачислен в группу " + group.GetGroupName());
+            int k = 0;
+            for (int i = n - 1; i >= 0; i--) {
+                arrayB[k] = array[i];
+                k++;
+            }
 
-        }
-        static void ExpelStudent(Group group) {
-            Console.WriteLine("Введите полное имя студента, который будет отчислен");
-            string name = Console.ReadLine();
-            group.ExpelStudent(name);
-            Console.WriteLine("Студент " + name + " был успешно ОТЧИСЛЕН из группы " + group.GetGroupName());
-        }
-        static void MakeManager(ref Group group) {
-            Console.WriteLine("Введите имя нового старосты");
-            group.GetManager().DowngradeManager();
-            string name = Console.ReadLine();
-            group.SearchStudent(name).MakeManager();
-        }
-
-        static void ShowManager(Group group) {
-            Console.WriteLine("Староста группы " + group.GetGroupName() + " - " + group.GetManager().GetName());
-        }
-
-        static void AddGroup() {
-            Console.WriteLine("Введите название группы:");
-            string groupName = Console.ReadLine();
-            groups.Add(new Group(groupName));
-
-        }
-
-        static int[] ReadArray(char din) {
-
-            string s = Console.ReadLine();
-            if (s.ElementAt(s.Length - 1) == ' ')
+            for (int i = 0; i < n; i++)
             {
-                s = s.Remove(s.Length - 1, 1);
+                Console.Write(arrayB[i] + " ");
             }
-            string[] tokens = s.Split();
-
-            int[] array = new int[tokens.Length];
-            for (int i = 0; i < array.Length; i++){
-                array[i] = int.Parse(tokens[i]);
-            }
-            return array;
         }
+    
+        static void PracticalWork_7()
+        {
+            Console.WriteLine("Практическая работа №7");
 
+            Console.WriteLine("Укажите размреность матрицы");
+            int n = Convert.ToInt16(Console.ReadLine());
+
+            int[,] array = new int[n + 2, n + 2];
+
+            for (int i = 0; i < n + 2; i++)
+            {
+                for (int j = 0; j < n + 2; j++)
+                {
+                    if (i == 0 || j == 0 || i == n + 1 || j == n + 1)
+                        array[i, j] = -1;
+                    else
+                        array[i, j] = 0;
+                }
+
+            }
+
+            int arrayValue = 0;
+            int direction = 0;
+
+            int indexOfLine = 1, indexOfColumn = 1;
+            if (n == 1)
+                Console.WriteLine(1);
+            else
+            {
+                while (arrayValue < n * n)
+                {
+
+                    while (direction == 0)
+                    {
+                        arrayValue++;
+                        if (array[indexOfLine, indexOfColumn + 1] == 0)
+                        {
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfColumn++;
+                        }
+                        else
+                        {
+                            if (arrayValue > n * n)
+                                break;
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfLine++;
+                            //arrayValue--;
+                            direction = 1;
+                        }
+                    }
+
+                    while (direction == 1)
+                    {
+                        arrayValue++;
+                        if (array[indexOfLine + 1, indexOfColumn] == 0)
+                        {
+
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfLine++;
+
+                        }
+                        else
+                        {
+                            if (arrayValue > n * n)
+                                break;
+                            //arrayValue--;
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfColumn--;
+                            direction = 2;
+                        }
+                    }
+
+                    while (direction == 2)
+                    {
+                        arrayValue++;
+                        if (array[indexOfLine, indexOfColumn - 1] == 0)
+                        {
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfColumn--;
+                        }
+                        else
+                        {
+                            if (arrayValue > n * n)
+                                break;
+                            //arrayValue--;
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfLine--;
+                            direction = 3;
+                        }
+                    }
+
+                    while (direction == 3)
+                    {
+                        arrayValue++;
+                        if (array[indexOfLine - 1, indexOfColumn] == 0)
+                        {
+                            //arrayValue++;
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfLine--;
+                        }
+                        else
+                        {
+                            if (arrayValue > n * n)
+                                break;
+                            //arrayValue--;
+                            array[indexOfLine, indexOfColumn] = arrayValue;
+                            indexOfColumn++;
+                            direction = 0;
+                        }
+                    }
+
+                }
+
+                for (int i = 1; i < n + 1; i++)
+                {
+                    for (int j = 1; j < n + 1; j++)
+                    {
+
+                        Console.Write(array[i, j] + " ");
+                    }
+                    Console.WriteLine();
+
+                }
+            }
+
+
+        }
     }
 }
