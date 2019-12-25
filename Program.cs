@@ -9,12 +9,12 @@ namespace PracticalWorks
 
             PracticalWork_1();
             PracticalWork_2();
-            //PracticalWork_3();
+            PracticalWork_3();
             PracticalWork_4();
             PracticalWork_5();
             PracticalWork_6();
             PracticalWork_7();
-
+        
         }
 
         static void PracticalWork_1()
@@ -64,7 +64,7 @@ namespace PracticalWorks
             bool hasMontice = false;
             fl = false;
 
-            Console.WriteLine("Ваще число: " + str);
+            Console.WriteLine("Ваiе число: " + str);
             for (int i = 0; i < str.Length; i++)
             {
                 if (str[i] == ',')
@@ -90,11 +90,9 @@ namespace PracticalWorks
             Console.WriteLine("Введите натруальное число n");
             int n = Convert.ToInt32(Console.ReadLine());
             double answer = 1;
+            int f = 1; 
             for (int i = 1; i <= n; i++) {
-                int f = 1;
-                for (int j = 1; j <= i; j++) {
-                    f *= j;
-                }
+                f *= i;
                 answer *= 2 + (double)1/f;
             }
             Console.WriteLine("Ответ: " + answer);
@@ -103,13 +101,30 @@ namespace PracticalWorks
         static void PracticalWork_3() { 
             Console.WriteLine("Практическая работа №3");
 
+            int d0 = 1, 
+                d1 = 3;
+            double value = 1.0 /(d0*d1),
+                e = 0.75;
+            int i = 1;
+            Console.WriteLine(i+ ": "+ Math.Abs(value));
+
+            while (Math.Abs(value) >= e) {
+                d0++;
+                d1++;
+                i++;
+                Console.WriteLine(i+ ": "+ Math.Abs(value));
+                value += 1.0 / (d0 * d1);
+            }
+            Console.WriteLine("End. Сумма оказалась меньше либо равна");
+
+
 
         }
 
         static void PracticalWork_4() {
             Console.WriteLine("Практическая работа №4");
 
-            Console.Write("Двузначное число, которое равно утроенному произведению его чисел: ");
+            Console.Write("Двузначное число, которое равно утроенному произведению его цифирок: ");
             int answer = 0;
 
             for (int i = 10; i < 100; i++)
@@ -128,22 +143,24 @@ namespace PracticalWorks
         static void PracticalWork_5() {
             Console.WriteLine("Практическая работа №5");
 
-            string str = "";
+            string str = "11";
             Console.WriteLine("Введите число k");
             int k = Convert.ToInt32(Console.ReadLine());
             int f0 = 1;
             int f1 = 1;
-            str = "11";
             for (int i = 0; i < k; i++) {
+                if (str.Length >= k)
+                    break;
                 int fc = f0 + f1;
                 f0 = f1;
                 f1 = fc;
 
                 str = str + fc.ToString();
             }
+            
             Console.WriteLine("k-ый символ последовательности [ " + str + "... ]: " + str[k-1]);
         }
-
+        
         static void PracticalWork_6() {
             Console.WriteLine("Практическая работа №6");
 
